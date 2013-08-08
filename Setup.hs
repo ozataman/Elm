@@ -1,17 +1,17 @@
-import Distribution.Simple
-import Distribution.Simple.LocalBuildInfo
-import Distribution.Simple.Setup
-import Distribution.PackageDescription
+import           Distribution.PackageDescription
+import           Distribution.Simple
+import           Distribution.Simple.LocalBuildInfo
+import           Distribution.Simple.Setup
 
-import System.Cmd
-import System.Directory
-import System.FilePath
-import System.IO
-import System.Process
+import           System.Cmd
+import           System.Directory
+import           System.FilePath
+import           System.IO
+import           System.Process
 
-import Control.Monad
-import qualified Data.Binary as Binary
-import qualified Data.ByteString.Lazy as BS
+import           Control.Monad
+import qualified Data.Binary                        as Binary
+import qualified Data.ByteString.Lazy               as BS
 
 -- Part 1
 -- ------
@@ -73,16 +73,6 @@ filterExe :: String -> PackageDescription -> PackageDescription
 filterExe name pd = pd {
     library = Nothing,
     executables = filter (\x -> (exeName x == name)) (executables pd)
-    }
-
--- It's not enough to fix the PackageDescription, we also have to fix the
--- LocalBuildInfo. This includes the component build order (data ComponentName)
--- which is horribly internal.
-filterLBI :: String -> LocalBuildInfo -> LocalBuildInfo
-filterLBI name lbi = lbi {
-    libraryConfig = Nothing,
-    compBuildOrder = [CExeName name],
-    executableConfigs = filter (\a -> (fst a == name)) (executableConfigs lbi)
     }
 
 
